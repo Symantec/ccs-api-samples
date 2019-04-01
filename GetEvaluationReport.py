@@ -4,6 +4,10 @@
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+import xlwt
+import io
+import os
+
 # Variable 
 # Replace the <hostname> with CCS application server host name
 # Replace the <port number> with the configured port number for REST API, Default Port Number : 12431
@@ -12,6 +16,11 @@ HostName = '<hostname>'
 PortNumber = '<port number>'
 UserName = '<user name>'
 Password = '<password>'
+
+ExcelFilePath = "c:\\Outputfile.xls"
+
+if os.path.exists(ExcelFilePath):
+	os.remove(ExcelFilePath)
 
 # Function to generate CCS REST API access token
 def getToken():
@@ -44,5 +53,6 @@ headers = {
     'Content-Type': "application/json"
     }
 response = requests.request("GET", url, headers=headers, params=querystring, verify=False)
-print(response.text)
-print(response.json)
+file = open(ExcelFilePath,"wb")
+file.write(response.content)
+file.close()
